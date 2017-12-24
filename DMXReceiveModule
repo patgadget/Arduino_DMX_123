@@ -1,0 +1,50 @@
+#include <Servo.h>
+#define myubbr (16000000L/16/250000-1)
+Servo servo1; Servo servo2;
+
+char oldDMX;
+volatile unsigned char DMX[64];
+volatile int DMXChannel=0;
+
+ISR(USART_RX_vect)
+{
+  char temp,temp1;
+  temp1 = UCSR0A;
+  temp = UDR0&0xFF;
+  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) //Break
+  {
+    DMXChannel = 0;
+    return;
+  }
+  else if (DMXChannel<(char)25)
+  {
+    DMX[DMXChannel++]=temp&0xFF;
+  }
+}
+
+void setup()
+{
+  pinMode(0,INPUT); //DMX Serial IN
+  pinMode(6,OUTPUT); //BLUE
+  pinMode(5,OUTPUT); //GREEN
+  pinMode(11,OUTPUT); //RED
+  pinMode(10,OUTPUT); // TILT
+  pinMode(9,OUTPUT); // PAN
+
+  servo1.attach(9); //analog pin 0
+  servo2.attach(10); //analog pin 1
+  delay(100);
+  UBRR0H = (unsigned char)(myubbr>>8);
+  UBRR0L = (unsigned char)myubbr;
+  UCSR0B |= ((1<<RXEN0)|(1<<RXCIE0));//Enable Receiver and Interrupt RX
+  UCSR0C |= (3<<UCSZ00);//N81
+ 
+}
+void loop()
+{
+    servo1.write(map(DMX[1],0,255,25,125));
+    servo2.write(map(DMX[2],0,255,30,120));
+    analogWrite(11,255-DMX[3]);
+    analogWrite(5,255-DMX[4]);
+    analogWrite(6,255-DMX[5]);
+}

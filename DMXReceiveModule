@@ -1,6 +1,4 @@
 #define myubbr (16000000L/16/250000-1)
-Servo servo1; Servo servo2;
-
 volatile unsigned char DMX[64];
 volatile int DMXChannel=0;
 

@@ -2,20 +2,22 @@
 #define pin_RED 11
 #define pin_GREEN 5
 #define pin_BLUE 6
-volatile unsigned char DMX[64];
+volatile unsigned char DMX[64]; // Maximum DMX Channel that this module listen to
 volatile int DMXChannel=0;
 
 ISR(USART_RX_vect)
 {
+  // Interrupt routine when the Arduino receive some serial caracter
+  // Or if there is a BREAK (bad Caracter), This is how DMX reset the sequence
   char temp,temp1;
   temp1 = UCSR0A;
   temp = UDR0&0xFF;
-  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) //Break
+  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) //Break, So reset the Sequence
   {
     DMXChannel = 0;
     return;
   }
-  else if (DMXChannel<(char)25)
+  else if (DMXChannel<(char)25) // Maximum DMX Channel that this module fill the data into the array
   {
     DMX[DMXChannel++]=temp&0xFF;
   }
@@ -23,7 +25,7 @@ ISR(USART_RX_vect)
 
 void setup()
 {
-  pinMode(0,INPUT); //DMX Serial IN
+  pinMode(0,INPUT); //DMX Serial IN for now it is HardCoded
   pinMode(pin_BLUE,OUTPUT); //BLUE
   pinMode(pin_GREEN,OUTPUT); //GREEN
   pinMode(pin_RED,OUTPUT); //RED
@@ -31,7 +33,7 @@ void setup()
   UBRR0H = (unsigned char)(myubbr>>8);
   UBRR0L = (unsigned char)myubbr;
   UCSR0B |= ((1<<RXEN0)|(1<<RXCIE0));//Enable Receiver and Interrupt RX
-  UCSR0C |= (3<<UCSZ00);//N81
+  UCSR0C |= (3<<UCSZ00);//N81 No parity/8 bits/1 Stop bit
  
 }
 void loop()

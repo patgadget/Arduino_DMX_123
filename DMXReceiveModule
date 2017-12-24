@@ -1,4 +1,7 @@
 #define myubbr (16000000L/16/250000-1)
+#define pin_RED 11
+#define pin_GREEN 5
+#define pin_BLUE 6
 volatile unsigned char DMX[64];
 volatile int DMXChannel=0;
 
@@ -21,9 +24,9 @@ ISR(USART_RX_vect)
 void setup()
 {
   pinMode(0,INPUT); //DMX Serial IN
-  pinMode(6,OUTPUT); //BLUE
-  pinMode(5,OUTPUT); //GREEN
-  pinMode(11,OUTPUT); //RED
+  pinMode(pin_BLUE,OUTPUT); //BLUE
+  pinMode(pin_GREEN,OUTPUT); //GREEN
+  pinMode(pin_RED,OUTPUT); //RED
   delay(100);
   UBRR0H = (unsigned char)(myubbr>>8);
   UBRR0L = (unsigned char)myubbr;
@@ -33,7 +36,7 @@ void setup()
 }
 void loop()
 {
-    analogWrite(11,255-DMX[1]);
-    analogWrite(5,255-DMX[2]);
-    analogWrite(6,255-DMX[3]);
+    analogWrite(pin_RED,255-DMX[1]);
+    analogWrite(pin_GREEN,255-DMX[2]);
+    analogWrite(pin_BLUE,255-DMX[3]);
 }

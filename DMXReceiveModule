@@ -1,8 +1,6 @@
-#include <Servo.h>
 #define myubbr (16000000L/16/250000-1)
 Servo servo1; Servo servo2;
 
-char oldDMX;
 volatile unsigned char DMX[64];
 volatile int DMXChannel=0;
 
@@ -28,11 +26,6 @@ void setup()
   pinMode(6,OUTPUT); //BLUE
   pinMode(5,OUTPUT); //GREEN
   pinMode(11,OUTPUT); //RED
-  pinMode(10,OUTPUT); // TILT
-  pinMode(9,OUTPUT); // PAN
-
-  servo1.attach(9); //analog pin 0
-  servo2.attach(10); //analog pin 1
   delay(100);
   UBRR0H = (unsigned char)(myubbr>>8);
   UBRR0L = (unsigned char)myubbr;
@@ -42,9 +35,7 @@ void setup()
 }
 void loop()
 {
-    servo1.write(map(DMX[1],0,255,25,125));
-    servo2.write(map(DMX[2],0,255,30,120));
-    analogWrite(11,255-DMX[3]);
-    analogWrite(5,255-DMX[4]);
-    analogWrite(6,255-DMX[5]);
+    analogWrite(11,255-DMX[1]);
+    analogWrite(5,255-DMX[2]);
+    analogWrite(6,255-DMX[3]);
 }

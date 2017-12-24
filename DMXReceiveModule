@@ -1,3 +1,7 @@
+// DMX Receiver
+// DMX Channel 1,2,3 are copy onto RGB pin of the Arduino
+// PWM are from 0-255 on those pins.
+
 #define myubbr (16000000L/16/250000-1)
 #define pin_RED 11
 #define pin_GREEN 5
@@ -34,8 +38,9 @@ void setup()
   UBRR0L = (unsigned char)myubbr;
   UCSR0B |= ((1<<RXEN0)|(1<<RXCIE0));//Enable Receiver and Interrupt RX
   UCSR0C |= (3<<UCSZ00);//N81 No parity/8 bits/1 Stop bit
- 
+  // https://en.wikipedia.org/wiki/DMX512#Protocol  
 }
+
 void loop()
 {
     analogWrite(pin_RED,255-DMX[1]);

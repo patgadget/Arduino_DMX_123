@@ -14,26 +14,26 @@ ISR(USART_RX_vect)
   // Interrupt routine when the Arduino receive a serial caracter
   // Or if there is a BREAK (bad Caracter), This is how DMX reset the sequence
   char temp,temp1;
-  temp1 = UCSR0A;
-  temp = UDR0&0xFF; // USART Data Register
+  myUCSR0A = UCSR0A;
+  myUDR0 = UDR0&0xFF; // USART Data Register
   
   // Break So reset the Sequence
-  // FE0 is a Framing Error
-  // DOR0 is a Data Overrun
-  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) 
+  // FE0 is a Framing Error bit in UCSR0A
+  // DOR0 is a Data Overrun bit in UCSR0A
+  if ((myUCSR0A & (1<<FE0))||myUCSR0A & (1<<DOR0)) 
   {
     DMXChannel = 0;
     return;
   }
   else if (DMXChannel<(char)25) // Maximum DMX Channel that this module fill the data into the array
   {
-    DMX[DMXChannel++]=temp&0xFF;
+    DMX[DMXChannel++]=myUDR0&0xFF; // Read the Data value Received from DMX
   }
 }
 
 void setup()
 {
-  pinMode(0,INPUT); //DMX Serial IN for now it is HardCoded
+  pinMode(0,INPUT); //DMX Serial IN for now it is Hardcoded
   pinMode(pin_BLUE,OUTPUT); //BLUE
   pinMode(pin_GREEN,OUTPUT); //GREEN
   pinMode(pin_RED,OUTPUT); //RED

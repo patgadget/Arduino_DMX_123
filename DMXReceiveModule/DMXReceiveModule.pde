@@ -15,8 +15,12 @@ ISR(USART_RX_vect)
   // Or if there is a BREAK (bad Caracter), This is how DMX reset the sequence
   char temp,temp1;
   temp1 = UCSR0A;
-  temp = UDR0&0xFF;
-  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) //Break, So reset the Sequence
+  temp = UDR0&0xFF; // USART Data Register
+  
+  // Break So reset the Sequence
+  // FE0 is a Framing Error
+  // DOR0 is a Data Overrun
+  if ((temp1 & (1<<FE0))||temp1 & (1<<DOR0)) 
   {
     DMXChannel = 0;
     return;

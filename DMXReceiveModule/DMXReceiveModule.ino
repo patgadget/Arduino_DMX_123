@@ -13,7 +13,7 @@ ISR(USART_RX_vect)
 {
   // Interrupt routine when the Arduino receive a serial caracter
   // Or if there is a BREAK (bad Caracter), This is how DMX reset the sequence
-  char temp,temp1;
+  char myUCSR0A,myUDR0;
   myUCSR0A = UCSR0A;
   myUDR0 = UDR0&0xFF; // USART Data Register
   

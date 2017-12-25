@@ -2,7 +2,7 @@
 // DMX Channel 1,2,3 are copy onto RGB pin of the Arduino
 // PWM are from 0-255 on those pins.
 
-#define myubbr (16000000L/16/250000-1)
+#define myubrr (16000000L/16/250000-1)
 #define pin_RED 11
 #define pin_GREEN 5
 #define pin_BLUE 6
@@ -38,11 +38,17 @@ void setup()
   pinMode(pin_GREEN,OUTPUT); //GREEN
   pinMode(pin_RED,OUTPUT); //RED
   delay(100);
-  UBRR0H = (unsigned char)(myubbr>>8);
-  UBRR0L = (unsigned char)myubbr;
+  
+  // Baud rate set to 250KBaud https://en.wikipedia.org/wiki/DMX512#Protocol
+  // Setting depends on Crystal of the Arduino hence the myubbr #define
+  
+  // UBRR USART Baud Rate Register
+  // 12 bit on 2 register
+  UBRR0H = (unsigned char)(myubrr>>8); //High part, only bit 0-3
+  UBRR0L = (unsigned char)myubrr; //Low part
   UCSR0B |= ((1<<RXEN0)|(1<<RXCIE0));//Enable Receiver and Interrupt RX
   UCSR0C |= (3<<UCSZ00);//N81 No parity/8 bits/1 Stop bit
-  // https://en.wikipedia.org/wiki/DMX512#Protocol  
+  // https://en.wikipedia.org/wiki/DMX512#Protocol
 }
 
 void loop()

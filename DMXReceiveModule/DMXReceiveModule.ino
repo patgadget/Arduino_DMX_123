@@ -38,7 +38,6 @@ void setup()
   pinMode(pin_BLUE,OUTPUT); //BLUE
   pinMode(pin_GREEN,OUTPUT); //GREEN
   pinMode(pin_RED,OUTPUT); //RED
-  delay(100);
   
   // Baud rate set to 250KBaud https://en.wikipedia.org/wiki/DMX512#Protocol
   // Setting depends on Crystal of the Arduino hence the myubbr #define

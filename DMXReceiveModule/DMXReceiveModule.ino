@@ -6,8 +6,9 @@
 #define pin_RED 11
 #define pin_GREEN 5
 #define pin_BLUE 6
-volatile unsigned char DMX[64]; // Maximum DMX Channel that this module listen to
-volatile int DMXChannel=0;
+#define max_DMX 25 // Maximum DMX Channel that this module listen to
+volatile unsigned char DMX[max_DMX]; 
+volatile unsigned int DMXChannel=0;
 
 ISR(USART_RX_vect)
 {
@@ -25,7 +26,7 @@ ISR(USART_RX_vect)
     DMXChannel = 0;
     return;
   }
-  else if (DMXChannel<(char)25) // Maximum DMX Channel that this module fill the data into the array
+  else if (DMXChannel<max_DMX) // Maximum DMX Channel that this module fill the data into the array
   {
     DMX[DMXChannel++]=myUDR0&0xFF; // Read the Data value Received from DMX
   }

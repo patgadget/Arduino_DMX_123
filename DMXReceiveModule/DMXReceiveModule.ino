@@ -28,7 +28,7 @@ ISR(USART_RX_vect)
   }
   else if (DMXChannel<max_DMX) // Maximum DMX Channel that this module fill the data into the array
   {
-    DMX[DMXChannel++]=myUDR0&0xFF; // Read the Data value Received from DMX
+    DMX[DMXChannel++]=myUDR0; // Read the Data value Received from DMX
   }
 }
 

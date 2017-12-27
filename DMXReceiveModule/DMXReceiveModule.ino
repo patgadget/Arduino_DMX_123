@@ -3,6 +3,8 @@
 // PWM are from 0-255 on those pins.
 
 #define myubrr (16000000L/16/250000-1)
+
+// The only available pin for PWM are: 3,5,6,9,10,11
 #define pin_RED 11
 #define pin_GREEN 5
 #define pin_BLUE 6
